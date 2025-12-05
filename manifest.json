@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Karaoke Engine",
+  "version": "0.1",
+  "permissions": [
+    "tabCapture",
+    "offscreen",
+    "activeTab",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "Karaoke Engine"
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  }
+}

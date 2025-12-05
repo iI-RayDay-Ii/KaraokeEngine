@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<div class="container">
+  <!-- Header -->
+  <header class="header">
+    <h1>🎤 Karaoke Mode</h1>
+    <div class="subtitle">Mid-Side Vocal Remover</div>
+  </header>
+
+  <!-- Status -->
+  <div class="status" id="status">Ready</div>
+
+  <!-- Main Toggle -->
+  <button id="toggleBtn" class="toggle-btn">
+    Enable Karaoke
+  </button>
+  
+  <div><u>Current tab:</u> <span id="currentTabTitle">-</span></div>
+
+  <!-- Controls Container -->
+  <div class="controls" id="controls">
+
+    <!-- ==================== MAIN CONTROLS ==================== -->
+    <section class="control-section">
+      <div class="section-header" data-section="main">
+        <span class="section-title">🎚️ Main Controls</span>
+        <span class="section-toggle">−</span>
+      </div>
+      <div class="section-content" id="section-main">
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Center (Mid) Level</span>
+            <span class="label-hint">Lower = Less Vocals</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="midSlider" min="0" max="100" value="15">
+            <span id="midValue" class="value">15%</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Stereo (Side) Level</span>
+            <span class="label-hint">Higher = Wider Stereo</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="sideSlider" min="0" max="200" value="100">
+            <span id="sideValue" class="value">100%</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Master Volume</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="volumeSlider" min="0" max="200" value="100">
+            <span id="volumeValue" class="value">100%</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== VOCAL FREQUENCY TARGETING ==================== -->
+    <section class="control-section">
+      <div class="section-header" data-section="vocal">
+        <span class="section-title">🎤 Vocal Frequency Targeting</span>
+        <span class="section-toggle">+</span>
+      </div>
+      <div class="section-content collapsed" id="section-vocal">
+
+        <div class="info-box">
+          Filters target specific ranges of frequencies where vocals are present.
+          Human voice is typically 300-3500 Hz.
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notches Level</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notchesLevelSlider" min="0" max="100" value="100">
+            <span id="notchesLevelValue" class="value">100%</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 1 Frequency</span>
+            <span class="label-hint" id="notch1FreqHint">1500 Hz</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch1FreqSlider" min="200" max="4000" value="1500">
+            <span id="notch1FreqValue" class="value">1500</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 1 Depth</span>
+            <span class="label-hint">How much to cut</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch1GainSlider" min="0" max="100" value="30">
+            <span id="notch1GainValue" class="value">30%</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 1 Width of freq. range (Q)</span>
+            <span class="label-hint">Wide ↔ Narrow</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch1QSlider" min="1" max="100" value="15">
+            <span id="notch1QValue" class="value">1.5</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 2 Frequency</span>
+            <span class="label-hint" id="notch2FreqHint">3000 Hz</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch2FreqSlider" min="200" max="6000" value="3000">
+            <span id="notch2FreqValue" class="value">3000</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 2 Depth</span>
+            <span class="label-hint">How much to cut</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch2GainSlider" min="0" max="100" value="25">
+            <span id="notch2GainValue" class="value">25%</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 2 Width of freq. range (Q)</span>
+            <span class="label-hint">Wide ↔ Narrow</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch2QSlider" min="1" max="100" value="15">
+            <span id="notch2QValue" class="value">1.5</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 3 Frequency</span>
+            <span class="label-hint" id="notch3FreqHint">Off</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch3FreqSlider" min="200" max="8000" value="5000">
+            <span id="notch3FreqValue" class="value">5000</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 3 Depth</span>
+            <span class="label-hint">0 = Disabled</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch3GainSlider" min="0" max="100" value="0">
+            <span id="notch3GainValue" class="value">0%</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Notch 3 Width of freq. range (Q)</span>
+            <span class="label-hint">Wide ↔ Narrow</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="notch3QSlider" min="1" max="100" value="15">
+            <span id="notch3QValue" class="value">1.5</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== HIGH-PASS FILTERS ==================== -->
+    <!--  Пока решено было избавиться, см. заметки  -->
+<!--    <section class="control-section">-->
+<!--      <div class="section-header" data-section="highpass">-->
+<!--        <span class="section-title">📉 High-Pass Filters</span>-->
+<!--        <span class="section-toggle">+</span>-->
+<!--      </div>-->
+<!--      <div class="section-content collapsed" id="section-highpass">-->
+
+<!--        <div class="info-box">-->
+<!--          Remove low frequencies to reduce rumble and muddiness.-->
+<!--        </div>-->
+
+<!--        <div class="slider-group">-->
+<!--          <label>-->
+<!--            <span class="label-text">Mid Channel High-Pass</span>-->
+<!--            <span class="label-hint">Cut bass from center</span>-->
+<!--          </label>-->
+<!--          <div class="slider-row">-->
+<!--            <input type="range" id="midHPSlider" min="20" max="500" value="120">-->
+<!--            <span id="midHPValue" class="value">120 Hz</span>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--        <div class="slider-group">-->
+<!--          <label>-->
+<!--            <span class="label-text">Side Channel High-Pass</span>-->
+<!--            <span class="label-hint">Cut bass from sides</span>-->
+<!--          </label>-->
+<!--          <div class="slider-row">-->
+<!--            <input type="range" id="sideHPSlider" min="20" max="300" value="80">-->
+<!--            <span id="sideHPValue" class="value">80 Hz</span>-->
+<!--          </div>-->
+<!--        </div>-->
+
+<!--      </div>-->
+<!--    </section>-->
+
+    <!-- ==================== EQ CONTROLS ==================== -->
+    <section class="control-section">
+      <div class="section-header" data-section="eq">
+        <span class="section-title">🎛️ EQ / Tone Shaping</span>
+        <span class="section-toggle">+</span>
+      </div>
+      <div class="section-content collapsed" id="section-eq">
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Bass Boost</span>
+            <span class="label-hint">Compensate lost bass</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="bassSlider" min="0" max="100" value="40">
+            <span id="bassValue" class="value">40%</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Bass Frequency</span>
+            <span class="label-hint">Where bass boost applies</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="bassFreqSlider" min="50" max="300" value="150">
+            <span id="bassFreqValue" class="value">150 Hz</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Treble</span>
+            <span class="label-hint">Brightness adjustment</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="trebleSlider" min="-12" max="12" value="0">
+            <span id="trebleValue" class="value">0 dB</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Treble Frequency</span>
+            <span class="label-hint">Where treble control applies</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="trebleFreqSlider" min="2000" max="10000" value="4000">
+            <span id="trebleFreqValue" class="value">4000 Hz</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== ADVANCED ==================== -->
+    <section class="control-section">
+      <div class="section-header" data-section="advanced">
+        <span class="section-title">⚙️ Advanced</span>
+        <span class="section-toggle">+</span>
+      </div>
+      <div class="section-content collapsed" id="section-advanced">
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Limiter Threshold</span>
+            <span class="label-hint">Prevent clipping</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="limiterSlider" min="-20" max="0" value="-3">
+            <span id="limiterValue" class="value">-3 dB</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <label>
+            <span class="label-text">Crossfade Time</span>
+            <span class="label-hint">Parameter change smoothing</span>
+          </label>
+          <div class="slider-row">
+            <input type="range" id="crossfadeSlider" min="10" max="200" value="50">
+            <span id="crossfadeValue" class="value">50 ms</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== PRESETS ==================== -->
+    <section class="control-section presets-section">
+      <div class="section-header" data-section="presets">
+        <span class="section-title">💾 Presets</span>
+        <span class="section-toggle">−</span>
+      </div>
+      <div class="section-content" id="section-presets">
+
+        <div class="preset-grid">
+          <button class="preset-btn" data-preset="default" title="Default vocal removal">
+            👌 Default
+          </button>
+          <button class="preset-btn" data-preset="chineseKaraoke" title="Chinese karaoke voice cut-out">
+            🧧 Chinese karaoke
+          </button>
+          <button class="preset-btn" data-preset="femaleVocal" title="Optimized for female vocals">
+            👩 Female Voice
+          </button>
+        <!-- Пресеты от Claude, весьма специфичны, пока необходимости нет -->
+<!--          <button class="preset-btn" data-preset="karaoke" title="Standard vocal removal">-->
+<!--            🎤 Karaoke-->
+<!--          </button>-->
+<!--          <button class="preset-btn" data-preset="softVocal" title="Subtle vocal reduction">-->
+<!--            🔉 Soft Vocal ↓-->
+<!--          </button>-->
+<!--          <button class="preset-btn" data-preset="hardVocal" title="Aggressive vocal removal">-->
+<!--            🔇 Hard Vocal ↓-->
+<!--          </button>-->
+<!--          <button class="preset-btn" data-preset="instrumental" title="Maximum vocal removal">-->
+<!--            🎹 Instrumental-->
+<!--          </button>-->
+<!--          <button class="preset-btn" data-preset="wideStereo" title="Enhanced stereo width">-->
+<!--            ↔️ Wide Stereo-->
+<!--          </button>-->
+          <button class="preset-btn" data-preset="reset" title="Reset to original audio">
+            🔄 Reset
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="custom-preset-controls">
+          <input type="text" id="customPresetName" placeholder="Custom preset name..." class="preset-name-input">
+          <div class="custom-preset-buttons">
+            <button id="savePresetBtn" class="small-btn save-btn">💾 Save</button>
+            <button id="loadPresetBtn" class="small-btn load-btn">📂 Load</button>
+            <button id="deletePresetBtn" class="small-btn delete-btn">🗑️ Delete</button>
+          </div>
+          <select id="customPresetSelect" class="preset-select">
+            <option value="">-- Select Custom Preset --</option>
+          </select>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer Info -->
+  <footer class="footer">
+    <p class="info">
+      ℹ️ Works best with stereo tracks where vocals are center-panned
+    </p>
+  </footer>
+
+</div>
+
+<script src="config.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>
