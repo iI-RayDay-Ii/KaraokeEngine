@@ -1,4 +1,6 @@
 const storageKeyForCurrentTabId = config.storageKeyForCurrentTabId;
+const storageKeyForSettings = config.storageKeyForSettings;
+const storageKeyForCustomPresets = config.storageKeyForCustomPresets;
 let isEnabled = false;
 
 //#region DOM ELEMENTS
@@ -200,21 +202,27 @@ function formatQ(qValStr){
 
 function updateNotch1Hint(freqValueStr) {
   const qVal = getNormalizedNotchQValue(parseFloat(elements.notch1QSlider.value));
-  const {leftFreq, rightFreq} = calculateNotchQFreqRange(parseFloat(freqValueStr), qVal);
+  let {leftFreq, rightFreq} = calculateNotchQFreqRange(parseFloat(freqValueStr), qVal);
+  leftFreq = Math.max(0, leftFreq);
+  rightFreq = Math.min(20000, rightFreq);
   elements.notch1FreqHint.textContent = `${leftFreq.toFixed(1)}-${rightFreq.toFixed(1)} Hz`;
   return freqValueStr;
 }
 
 function updateNotch2Hint(freqValueStr) {
   const qVal = getNormalizedNotchQValue(parseFloat(elements.notch2QSlider.value));
-  const {leftFreq, rightFreq} = calculateNotchQFreqRange(parseFloat(freqValueStr), qVal);
+  let {leftFreq, rightFreq} = calculateNotchQFreqRange(parseFloat(freqValueStr), qVal);
+  leftFreq = Math.max(0, leftFreq);
+  rightFreq = Math.min(20000, rightFreq);
   elements.notch2FreqHint.textContent = `${leftFreq.toFixed(1)}-${rightFreq.toFixed(1)} Hz`;
   return freqValueStr;
 }
 
 function updateNotch3Hint(freqValueStr) {
   const qVal = getNormalizedNotchQValue(parseFloat(elements.notch3QSlider.value));
-  const {leftFreq, rightFreq} = calculateNotchQFreqRange(parseFloat(freqValueStr), qVal);
+  let {leftFreq, rightFreq} = calculateNotchQFreqRange(parseFloat(freqValueStr), qVal);
+  leftFreq = Math.max(0, leftFreq);
+  rightFreq = Math.min(20000, rightFreq);
   const gain = elements.notch3GainSlider.value;
   elements.notch3FreqHint.textContent = gain > 0 ? freqValueStr + `${leftFreq.toFixed(1)}-${rightFreq.toFixed(1)} Hz` : 'Off';
   return freqValueStr;
@@ -395,7 +403,7 @@ function prepareSettingsObjectWithCurrentValues(){
 
 function saveSettings() {
   const settings = prepareSettingsObjectWithCurrentValues();
-  chrome.storage.local.set({ settings });
+  chrome.storage.local.set({ [storageKeyForSettings]: settings });
 }
 
 /* Просто сохранять и забирать состояние караоке (включен/выключен) из Local storage не выйдет, т.к. при такой логике при включении караоке (в popup) в Local storage положится "true", а затем при закрытии и открытии браузера (но без прожатия кнопки Disable в UI караоке)
@@ -425,7 +433,7 @@ async function loadSavedState() {
     });
   }
   
-  chrome.storage.local.get(['settings'], (result) => {
+  chrome.storage.local.get([storageKeyForSettings], (result) => {
     if (result.settings) {
       applySettingsToUI(result.settings);
     }
@@ -588,7 +596,7 @@ function initializePresets() {
 
 //#region CUSTOM PRESETS
 function loadCustomPresets() {
-  chrome.storage.local.get(['customPresets'], (result) => {
+  chrome.storage.local.get([storageKeyForCustomPresets], (result) => {
     const presets = result.customPresets || {};
     updateCustomPresetDropdown(presets);
   });
@@ -616,11 +624,11 @@ elements.savePresetBtn.addEventListener('click', () => {
 
   const currentSettings = prepareSettingsObjectWithCurrentValues();
 
-  chrome.storage.local.get(['customPresets'], (result) => {
+  chrome.storage.local.get([storageKeyForCustomPresets], (result) => {
     const presets = result.customPresets || {};
     presets[name] = currentSettings;
 
-    chrome.storage.local.set({ customPresets: presets }, () => {
+    chrome.storage.local.set({ [storageKeyForCustomPresets]: presets }, () => {
       updateCustomPresetDropdown(presets);
       elements.customPresetName.value = '';
       elements.customPresetSelect.value = name;
@@ -636,7 +644,7 @@ elements.loadPresetBtn.addEventListener('click', () => {
     return;
   }
 
-  chrome.storage.local.get(['customPresets'], (result) => {
+  chrome.storage.local.get([storageKeyForCustomPresets], (result) => {
     const presets = result.customPresets || {};
     const preset = presets[name];
 
@@ -657,11 +665,11 @@ elements.deletePresetBtn.addEventListener('click', () => {
   }
 
   if (confirm(`Delete preset "${name}"?`)) {
-    chrome.storage.local.get(['customPresets'], (result) => {
+    chrome.storage.local.get([storageKeyForCustomPresets], (result) => {
       const presets = result.customPresets || {};
       delete presets[name];
 
-      chrome.storage.local.set({ customPresets: presets }, () => {
+      chrome.storage.local.set({ [storageKeyForCustomPresets]: presets }, () => {
         updateCustomPresetDropdown(presets);
       });
     });

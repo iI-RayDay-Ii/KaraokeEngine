@@ -61,8 +61,15 @@ body {
 }
 
 .header h1 {
+  position: relative;
+  display: inline-block;
   font-size: 22px;
   margin-bottom: 2px;
+}
+
+.floatingPrefixSpan{
+  position: absolute;
+  right: 100%;
 }
 
 .subtitle {
@@ -158,6 +165,12 @@ body {
 
 .section-header:hover {
   background: var(--bg-hover);
+}
+
+.section-header:has(+ .section-content:not(.collapsed)){
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    padding-top: 4px;
 }
 
 .section-title {
